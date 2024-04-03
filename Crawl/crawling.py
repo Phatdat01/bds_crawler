@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -17,7 +17,7 @@ def load_chrome() -> WebDriver:
 
 def access_web(nees:str, province:str, url:str, driver:WebDriver):
     driver.get(url=url)
-    wait = wait_element(driver=driver,timeout=120,key="css",by="select.need")
+    wait = wait_element(driver=driver,timeout=120,key="css",by=".uk-form-controls > .need > select")
     need = 
 
 
