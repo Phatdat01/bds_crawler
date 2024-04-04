@@ -5,4 +5,5 @@ def crawling():
     driver = load_chrome()
     access_web(need="Bán", province="Long An", url=URL, driver=driver)
 
-crawling();
+
+crawling()

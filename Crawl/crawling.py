@@ -18,7 +18,6 @@ def load_chrome() -> WebDriver:
 def access_web(nees:str, province:str, url:str, driver:WebDriver):
     driver.get(url=url)
     wait = wait_element(driver=driver,timeout=120,key="css",by=".uk-form-controls > .need > select")
-    need = 
 
 
 def wait_element(driver: WebDriver, timeout: int, key:str, by:str) -> WebElement:
