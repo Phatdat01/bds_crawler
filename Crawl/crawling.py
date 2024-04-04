@@ -15,9 +15,18 @@ def load_chrome() -> WebDriver:
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
-def access_web(nees:str, province:str, url:str, driver:WebDriver):
+def access_web(need:str, province:str, url:str, driver:WebDriver):
     driver.get(url=url)
     wait = wait_element(driver=driver,timeout=120,key="css",by=".uk-form-controls > .need > select")
+ 
+    wait =driver.find_elements(By.CSS_SELECTOR,value=".uk-form-controls > .need > select")
+    need_select = Select(wait[0])
+    need_select.select_by_visible_text(need)
+    wait =driver.find_elements(By.CSS_SELECTOR,value=".uk-form-controls > .city > select")
+    need_select = Select(wait[0])
+    need_select.select_by_visible_text(province)
+    search = driver.find_elements(By.CSS_SELECTOR, value=".button > .uk-button")
+    search[0].click()
 
 
 def wait_element(driver: WebDriver, timeout: int, key:str, by:str) -> WebElement:
