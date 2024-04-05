@@ -29,19 +29,22 @@ def access_web(need:str, province:str, url:str, driver:WebDriver):
     search[0].click()
 
 
-def wait_element(driver: WebDriver, timeout: int, key:str, by:str) -> WebElement:
+def wait_element(driver: WebDriver, timeout: int, key: str, by: str) -> WebElement:
     if by.lower() == "id":
-        condition = EC.visibility_of_element_located((By.ID, key))
+        condition = EC.presence_of_element_located((By.ID, key))
     elif by.lower() == "class":
         condition = EC.visibility_of_element_located((By.CLASS_NAME, key))
     elif by.lower() == "name":
-        condition = EC.visibility_of_element_located((By.NAME, key))
+        condition = EC.element_to_be_clickable((By.NAME, key))
     elif by.lower() == "tag":
-        condition = EC.visibility_of_element_located((By.TAG_NAME, key))
+        condition = EC.element_to_be_clickable((By.TAG_NAME, key))
     elif by.lower() == "css":
-        condition = EC.visibility_of_element_located((By.CSS_SELECTOR, key))
+        condition = EC.element_to_be_clickable((By.CSS_SELECTOR, key))
     else:
         return []
 
-    element = WebDriverWait(driver, timeout).until(condition)
-    return element
+    try:
+        element = WebDriverWait(driver, timeout).until(condition)
+        return element
+    except:
+        return []
