@@ -10,8 +10,6 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.edge.service import Service as EdgeService
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 def load_chrome() -> WebDriver:
     service = Service()

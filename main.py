@@ -1,2 +1,4 @@
+from GUI.app import process_theme
+
 if __name__=="__main__":
-    print("ok")
+    process_theme()

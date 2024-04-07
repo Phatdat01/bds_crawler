@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk 
 from tkinter import messagebox
+from pathlib import Path
+
+from Crawl.crawl import crawl
 
 NEED_LIST = [
     "Bán",
@@ -8,9 +11,9 @@ NEED_LIST = [
 ]
 
 PROVINCE_LIST = [
-    "a",
-    "b",
-    "c"
+    "Long An",
+    "TP Hồ Chí Minh",
+    "Sóc Trăng"
 ]
 
 PAGE_LIST = [
@@ -19,11 +22,11 @@ PAGE_LIST = [
     "3"
 ]
 
-def start_crawl(need: str, province: str):
-    messagebox.showinfo("showinfo", f"{need} & {province}")
+DOWNLOAD_PATH = str(Path.home() / "Downloads")
+FILE_NAME="temp"
 
-def compare_button() -> None:
-    messagebox.showinfo("showinfo", "Done")
+def start_crawl(need: str, province: str, page: int):
+    crawl(need=need, province=province, page=page, donwload_folder=DOWNLOAD_PATH, file_name=FILE_NAME)
 
 def process_theme():
     """
@@ -78,7 +81,8 @@ def process_theme():
         cursor="hand2",
         command = lambda: start_crawl(
             need=need.get(),
-            province=province.get()
+            province=province.get(),
+            page=page.get()
         ) 
     )
     start.grid(row=5, column=1, columnspan=2, padx = 20,pady=10)
