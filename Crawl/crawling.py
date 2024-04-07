@@ -19,7 +19,7 @@ def load_chrome() -> WebDriver:
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
-def access_web(need:str, province:str, url:str, driver:WebDriver):
+def access_web(need:str, province:str, url:str, page: int, driver:WebDriver):
     driver.get(url=url)
 
     time.sleep(4)
@@ -39,35 +39,60 @@ def access_web(need:str, province:str, url:str, driver:WebDriver):
     ## Click
     searchs = driver.find_elements(By.CSS_SELECTOR, value=".button > .uk-button")
     handle_tag(taglist=searchs)
+    if page != 1:
+        time.sleep(4)
+        driver.get(f"{driver.current_url}/p{page}")
 
-def collect_data(driver: WebDriver):
-    new_data = pd.DataFrame(columns= ["price","area","address","customer_name","customer_link","customer_mail","customer_phone","content","img"])
+def change_page(driver: WebDriver):
+    time.sleep(0.5)
+    next = driver.find_element(By.CSS_SELECTOR,value='[rel="next"]')
+    if next:
+        next.click()
+        content_page = wait_element(driver=driver, timeout=10, key="datalist", by="class")
+        return True
+    return False
+
+def collect_data(driver: WebDriver, page: str,need: str, province: str, href: str):
+    new_data = pd.DataFrame(columns= ["page","item","need","province","price","area","address","customer_name","customer_link","customer_mail","customer_phone","content","img"])
+    new_data["customer_phone"] = new_data["customer_phone"].astype(str)
     content_page = driver.find_elements(By.CLASS_NAME,value="datalist")[0]
-    urls = content_page.find_elements(By.XPATH, './div/div/div/div/a')
+    urls = content_page.find_elements(By.CSS_SELECTOR, 'div > div > .item > .image.cover > a')
     # for index in range(len(urls),4):
+    pass_item =1
     for index in range(len(urls)):
         row = {}
         ## Open new tab
         ## open web
         try:
             url=urls[index].get_attribute("href")
-            print(url)
             driver.execute_script("window.open('');")
             driver.switch_to.window(driver.window_handles[1])
             driver.get(url=url)
             wait = wait_element(driver=driver,timeout=5,key=".body > .meta > strong",by="css")
-            row["price"] = driver.find_element(By.CSS_SELECTOR,value=".body > .meta > strong").text
-            row["area"] = driver.find_elements(By.CSS_SELECTOR,value=".param > .uk-list > li")[0].text
-            row["address"] = driver.find_elements(By.CSS_SELECTOR,value=".param > .uk-list > li")[1].text
-            row["customer_name"] = driver.find_element(By.CSS_SELECTOR,value=".header > .name > a").text
-            row["customer_link"] = driver.find_element(By.CSS_SELECTOR,value=".header > .name > a").get_attribute("href")
-            row["customer_mail"] = driver.find_element(By.CSS_SELECTOR,value=".more.email > a").get_attribute("href")
-            row["customer_phone"] = driver.find_element(By.CSS_SELECTOR,value=".more.phone > a").get_attribute("href")
-            row["content"] = driver.find_element(By.CSS_SELECTOR,value=".body > .content").text
-            ## list of img link
-            img_links= driver.find_elements(By.CSS_SELECTOR,value=".uk-slider-container > div > div > .image.cover > a")
-            row["img"] = [link.get_attribute("href") for link in img_links]    
-            new_data.loc[len(new_data)] = row
+            if href != driver.current_url:
+                check = driver.find_elements(By.CSS_SELECTOR,value=".param > .uk-list > li")[0].text
+                if "diện tích" in check.lower():
+                    try:
+                        row["page"] = page
+                        row["item"] = pass_item
+                        row["need"] = need
+                        row["province"]= province
+                        row["area"] = check.replace("Diện tích: ","")
+                        row["price"] = driver.find_element(By.CSS_SELECTOR,value=".body > .meta > strong").text
+                        row["address"] = driver.find_elements(By.CSS_SELECTOR,value=".param > .uk-list > li")[1].text
+                        row["customer_name"] = driver.find_element(By.CSS_SELECTOR,value=".header > .name > a").text
+                        row["customer_link"] = driver.find_element(By.CSS_SELECTOR,value=".header > .name > a").get_attribute("href")
+                        row["customer_mail"] = driver.find_element(By.CSS_SELECTOR,value=".more.email > a").get_attribute("href").replace("mailto:","")
+                        row["customer_phone"] = driver.find_element(By.CSS_SELECTOR,value=".more.phone > a").get_attribute("href").replace("tel:","")
+                        row["content"] = driver.find_element(By.CSS_SELECTOR,value=".body > .content").text
+                    except:
+                        pass
+                    ## list of img link
+                    img_links= driver.find_elements(By.CSS_SELECTOR,value=".uk-slider-container > div > div > .image.cover > a")
+                    row["img"] = [link.get_attribute("href") for link in img_links]    
+                    new_data.loc[len(new_data)] = row
+                    pass_item +=1
+
             driver.execute_script("window.close();")
             driver.switch_to.window(driver.window_handles[0])
             print(driver.window_handles)
