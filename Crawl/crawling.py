@@ -78,13 +78,13 @@ def collect_data(driver: WebDriver, page: str,need: str, province: str, href: st
                         row["need"] = need
                         row["province"]= province
                         row["area"] = check.replace("Diện tích: ","")
-                        row["price"] = driver.find_element(By.CSS_SELECTOR,value=".body > .meta > strong").text
-                        row["address"] = driver.find_elements(By.CSS_SELECTOR,value=".param > .uk-list > li")[1].text
-                        row["customer_name"] = driver.find_element(By.CSS_SELECTOR,value=".header > .name > a").text
-                        row["customer_link"] = driver.find_element(By.CSS_SELECTOR,value=".header > .name > a").get_attribute("href")
-                        row["customer_mail"] = driver.find_element(By.CSS_SELECTOR,value=".more.email > a").get_attribute("href").replace("mailto:","")
-                        row["customer_phone"] = driver.find_element(By.CSS_SELECTOR,value=".more.phone > a").get_attribute("href").replace("tel:","")
-                        row["content"] = driver.find_element(By.CSS_SELECTOR,value=".body > .content").text
+                        row["price"] = get_value_with_css_selector(driver=driver, item=".body > .meta > strong")                      
+                        row["address"] = get_value_with_css_selector(driver=driver, item=".param > .uk-list > li", index_of_list=1)
+                        row["content"] = get_value_with_css_selector(driver=driver, item=".body > .content")
+                        row["customer_name"] = get_value_with_css_selector(driver=driver, item=".header > .name > a")
+                        row["customer_link"] = get_value_with_css_selector(driver=driver, item=".header > .name > a", is_url=True)
+                        row["customer_mail"] = get_value_with_css_selector(driver=driver, item=".more.email > a", is_url=True)
+                        row["customer_phone"] = get_value_with_css_selector(driver=driver, item=".more.phone > a", is_url=True)
                     except:
                         pass
                     ## list of img link
@@ -100,7 +100,24 @@ def collect_data(driver: WebDriver, page: str,need: str, province: str, href: st
             pass
     return new_data
 
-def action_with_multi_case(driver:WebDriver,css_selector_list: List[str]):
+
+def get_value_with_css_selector(driver: WebDriver, item: str, is_url: bool=False, index_of_list: int=None):
+    words_to_remove = ["mailto:", "tel:"]
+    try:
+        if index_of_list:
+            return driver.find_elements(By.CSS_SELECTOR, value=item)[index_of_list].text
+        result = driver.find_element(By.CSS_SELECTOR, value=item)
+        if is_url:
+            result = result.get_attribute("href")
+        else:
+            result = result.text
+        for word in words_to_remove:
+            result = result.replace(word,"")
+        return result
+    except:
+        return ""
+
+def action_with_multi_case(driver:WebDriver, css_selector_list: List[str]):
     for css_selector in css_selector_list:
         try:
             search = driver.find_elements(By.CSS_SELECTOR, value=css_selector)
