@@ -1,12 +1,9 @@
-from pathlib import Path
-from storing import store_data
-from crawling import load_chrome, access_web, collect_data, change_page
-import time
+from Crawl.storing import store_data
+from Crawl.crawling import load_chrome, access_web, collect_data, change_page
 
 URL = "https://batdongsan.vn/"
-DOWNLOAD_PATH = str(Path.home() / "Downloads")
 
-def crawling(need: str, province: str, page: int, donwload_folder: str, file_name: str):
+def crawl(need: str, province: str, page: int, donwload_folder: str, file_name: str):
     try:
         driver = load_chrome()
         access_web(need=need, province=province, url=URL, page=page, driver=driver)
@@ -22,5 +19,3 @@ def crawling(need: str, province: str, page: int, donwload_folder: str, file_nam
     finally:
         # Close the driver even if an exception is raised
         driver.quit()
-
-crawling(need="Bán", province="Long An", page=3, donwload_folder=DOWNLOAD_PATH, file_name="temp")
