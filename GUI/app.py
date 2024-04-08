@@ -13,14 +13,14 @@ NEED_LIST = [
 PROVINCE_LIST = [
     "Long An",
     "TP Hồ Chí Minh",
-    "Sóc Trăng"
+    "Sóc Trăng",
+    "Hà Nội",
+    "An Giang",
+    "Bà Rịa Vũng Tàu",
+    "Bắc Giang"
 ]
 
-PAGE_LIST = [
-    "1",
-    "2",
-    "3"
-]
+PAGE_LIST = list(range(1, 101))
 
 DOWNLOAD_PATH = str(Path.home() / "Downloads")
 FILE_NAME="temp"
@@ -89,5 +89,3 @@ def process_theme():
 
     win.eval('tk::PlaceWindow . center')
     win.mainloop()
-
-process_theme()
