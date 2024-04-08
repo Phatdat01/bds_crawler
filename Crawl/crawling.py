@@ -1,6 +1,8 @@
+import re
 import time
 import pandas as pd
 from typing import List
+from datetime import datetime, timedelta
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -52,7 +54,7 @@ def change_page(driver: WebDriver):
     return False
 
 def collect_data(driver: WebDriver, page: str,need: str, province: str, href: str):
-    new_data = pd.DataFrame(columns= ["page","item","need","province","price","area","address", "room", "direction", "other", "customer_name","customer_link","customer_mail","customer_phone","content","img"])
+    new_data = pd.DataFrame(columns= ["page","item","need","province","price","area","address", "room", "direction", "create_date", "other", "customer_name","customer_link","customer_mail","customer_phone","content","img"])
     new_data["customer_phone"] = new_data["customer_phone"].astype(str)
     content_page = driver.find_elements(By.CLASS_NAME,value="datalist")[0]
     if content_page:
@@ -64,6 +66,7 @@ def collect_data(driver: WebDriver, page: str,need: str, province: str, href: st
             ## Open new tab
             ## open web
             try:
+                current = datetime.now()
                 url=urls[index].get_attribute("href")
                 driver.execute_script("window.open('');")
                 driver.switch_to.window(driver.window_handles[1])
@@ -84,14 +87,26 @@ def collect_data(driver: WebDriver, page: str,need: str, province: str, href: st
                             for item in list_detail:
                                 if "Địa chỉ: " in item.text:
                                     row["address"] = item.text
-                                else:
-                                    if "Phòng ngủ: " in item.text:
-                                        row["room"] = item.text
+                                elif "Phòng ngủ: " in item.text:
+                                    row["room"] = item.text
+                                elif "Hướng nhà: " in item.text:
+                                    row["direction"] = item.text
+                                elif "Ngày đăng: " in item.text:
+                                    match = re.search(r"(\d+)\s+(tháng|ngày|năm)\s+trước", item.text)
+                                    number = int(match.group(1))
+                                    # date | month | year
+                                    unit = match.group(2)
+
+                                    if unit == "ngày":
+                                        date_num = 1
+                                    elif unit == "tháng":
+                                        date_num = 30
                                     else:
-                                        if "Hướng nhà: " in item.text:
-                                            row["direction"] = item.text
-                                        else:
-                                            row["other"] = item.text
+                                        date_num = 365
+                                    date_calculate = current - timedelta(days=date_num*number)
+                                    row["create_date"] = date_calculate.strftime("%Y-%m-%d")
+                                else:
+                                    row["other"] = item.text
                             
                             row["content"] = get_value_with_css_selector(driver=driver, item=".body > .content")
                             row["customer_name"] = get_value_with_css_selector(driver=driver, item=".header > .name > a")
