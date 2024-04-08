@@ -10,7 +10,8 @@ def crawl(need: str, province: str, page: int, donwload_folder: str, file_name: 
         page=1
         while True:
             data = collect_data(driver,page=str(page),need=need, province=province, href=URL)
-            store_data(data=data, link=donwload_folder, file_name=file_name)
+            if len(data):
+                store_data(data=data, path=donwload_folder, file_name=file_name)
             if not change_page(driver=driver):
                 break
             page += 1
