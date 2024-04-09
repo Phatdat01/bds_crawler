@@ -11,16 +11,14 @@ NEED_LIST = [
 ]
 
 PROVINCE_LIST = [
-    "Long An",
-    "TP Hồ Chí Minh",
-    "Sóc Trăng",
-    "Hà Nội",
-    "An Giang",
-    "Bà Rịa Vũng Tàu",
-    "Bắc Giang"
+    "An Giang","Bà Rịa Vũng Tàu","Bạc Liêu","Bắc Kạn","Bắc Giang","Bắc Ninh","Bến Tre","Bình Dương","Bình Định","Bình Phước","Bình Thuận","Cà Mau","Cần Thơ",
+    "Cao Bằng","Đà Nẵng","Đắk Lắk","Đắk Nông","Điện Biên","Đồng Nai","Đồng Tháp","Gia Lai","Hà Giang","Hà Nam","Hà Nội","Hà Tĩnh","Hải Dương","Hải Phòng",
+    "Hậu Giang","Hòa Bình","Hưng Yên","Khánh Hòa","Kiên Giang","Kon Tum","Lai Châu","Lâm Đồng","Lạng Sơn","Lào Cai","Long An","Nam Định","Nghệ An","Ninh Bình",
+    "Ninh Thuận","Phú Thọ","Phú Yên","Quảng Bình","Quảng Nam","Quảng Ngãi","Quảng Ninh","Quảng Trị","Sóc Trăng","Sơn La","Tây Ninh","Thái Bình","Thái Nguyên",
+    "Thanh Hóa","Thừa Thiên Huế","Tiền Giang","TP Hồ Chí Minh","Trà Vinh","Tuyên Quang","Vĩnh Long","Vĩnh Phúc","Yên Bái"
 ]
 
-PAGE_LIST = list(range(1, 101))
+PAGE_LIST = list(range(1, 1001))
 
 DOWNLOAD_PATH = str(Path.home() / "Downloads")
 FILE_NAME="temp"
@@ -57,7 +55,7 @@ def process_theme():
     need.current(0)
 
     # province
-    province = ttk.Combobox(win, width = 10, font=25, textvariable = tk.Listbox())
+    province = ttk.Combobox(win, width = 10, font=25, textvariable = tk.Listbox(), state="readonly")
     province['values'] = PROVINCE_LIST
     province.grid(column = 2, row = 3, padx = 20,pady=10) 
     province.current(0)
