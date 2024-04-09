@@ -53,7 +53,7 @@ def change_page(driver: WebDriver):
         return True
     return False
 
-def collect_data(driver: WebDriver, page: str,need: str, province: str, href: str):
+def collect_data(driver: WebDriver, page: int,need: str, province: str, href: str):
     new_data = pd.DataFrame(columns= ["page","item","need","province","price","area","address", "room", "direction", "create_date", "other", "link", "customer_name","customer_mail","customer_phone","content","img"])
     new_data["customer_phone"] = new_data["customer_phone"].astype(str)
     content_page = driver.find_elements(By.CLASS_NAME,value="datalist")[0]

@@ -23,8 +23,8 @@ PAGE_LIST = list(range(1, 1001))
 DOWNLOAD_PATH = str(Path.home() / "Downloads")
 FILE_NAME="temp"
 
-def start_crawl(need: str, province: str, page: int):
-    crawl(need=need, province=province, page=page, donwload_folder=DOWNLOAD_PATH, file_name=FILE_NAME)
+def start_crawl(need: str, province: str, page: str):
+    crawl(need=need, province=province, page=int(page), donwload_folder=DOWNLOAD_PATH, file_name=FILE_NAME)
 
 def process_theme():
     """

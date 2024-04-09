@@ -6,10 +6,10 @@ URL = "https://batdongsan.vn/"
 def crawl(need: str, province: str, page: int, donwload_folder: str, file_name: str):
     try:
         driver = load_chrome()
+        print(type(page))
         access_web(need=need, province=province, url=URL, page=page, driver=driver)
-        page=1
         while True:
-            data = collect_data(driver,page=str(page),need=need, province=province, href=URL)
+            data = collect_data(driver,page=page,need=need, province=province, href=URL)
             if len(data):
                 store_data(data=data, path=donwload_folder, file_name=file_name)
             if not change_page(driver=driver):
